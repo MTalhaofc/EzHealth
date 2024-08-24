@@ -23,13 +23,15 @@ class Admins extends Controller
     {
         $numbers = $this->database->getReference($this->tablename)->getValue();
 
+
     return view('firebase.admin.profile', compact('numbers'));
     }
 public function addnumber(){
 
     $numbers = $this->database->getReference($this->tablename)->getValue();
+    $totalnumbers = $this->database->getReference($this->tablename)->getSnapshot()->numChildren();
 
-    return view('firebase.admin.addnumber' , compact('numbers'));
+    return view('firebase.admin.addnumber' , compact('numbers','totalnumbers'));
 }
 public function store(Request $request){
 
@@ -51,5 +53,51 @@ else{
 
 }
 
+}
+public function edit($id){
+
+$key = $id;
+$editdata = $this->database->getReference($this->tablename)->getChild($key)->getValue();
+if($editdata){
+return view('firebase.admin.edit' , compact('editdata','key'));
+}
+else{
+    return redirect('addnumber')->with('status','Contact Id not found');
+}
+
+}
+public function update(Request $request,$id)  {
+    
+    $key = $id;
+    $updateddata = [
+        'fname' => $request -> firstname,
+        'lname' => $request -> lastname,
+        'number' => $request -> number,
+        'email' => $request -> email,
+        
+        
+            ];
+    $checkupdate =  $this->database->getReference($this->tablename.'/'.$key)->update($updateddata);
+if($checkupdate){
+    return redirect('addnumber')->with('status','Updated data');
+
+}
+else{
+    return redirect('addnumber')->with('status','not updated');
+
+}
+}
+public function delete($id){
+
+    $key = $id;
+     $checkdel=  $this->database->getReference($this->tablename.'/'.$key)->remove();
+     if($checkdel){
+        return redirect('addnumber')->with('status','deleted data');
+    
+    }
+    else{
+        return redirect('addnumber')->with('status','data not founded');
+    
+    }
 }
 }

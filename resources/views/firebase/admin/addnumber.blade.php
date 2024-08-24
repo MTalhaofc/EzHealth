@@ -2,6 +2,9 @@
     add number
 </h1>
 
+<h5>total number {{$totalnumbers}}</h5>
+
+
 @if (session('status'))
     <h4>{{ session('status') }}</h4>
 @endif
@@ -30,9 +33,9 @@
 <br><h4>{{$item['email']}}</h4>
 
 <br>
-<a href="">EDit</a>
+<a href="{{ url('editnumber/'.$key)}}">EDit</a>
 <br>
-<a href="">delete</a>
+<a href="{{ url('deletenumber/'.$key)}}">delete</a>
 
 @empty
     <h4>NO Record</h4>
