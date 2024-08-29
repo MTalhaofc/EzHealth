@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Firebase;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-// use Kreait\Laravel\Firebase\Facades\Firebase;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Contract\Database;
 
 
@@ -15,8 +15,110 @@ class Admins extends Controller
     public function __construct(Database $database)
     {
         $this->database = $database;
-        $this->tablename = 'users';
+        $this->admintable = 'admins';
     }
+
+public function addadmin(){
+    $numbers = $this->database->getReference($this->admintable)->getValue();
+    $totalnumbers = $this->database->getReference($this->admintable)->getSnapshot()->numChildren();
+
+    return view('firebase.admin.newadmin' );
+    
+}
+
+public function newadmin(Request $request)
+{
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'admin_role' => 'required|string',
+        'admin_email' => 'required|email',
+        'admin_password' => 'required|min:8'
+    ]);
+
+    // Prepare data to be inserted into Firebase
+    $postData = [
+        'admin_role' => $validatedData['admin_role'],
+        'admin_email' => $validatedData['admin_email'],
+        'admin_password' => bcrypt($validatedData['admin_password']), // Encrypt password before saving
+    ];
+
+    // Insert data into Firebase
+    try {
+        $postRef = $this->database->getReference($this->admintable)->push($postData);
+
+        if ($postRef) {
+            return redirect('dashboard')->with('status', 'Admin Added Successfully');
+        } else {
+            return redirect('dashboard')->with('status', 'Admin Not Added Successfully');
+        }
+    } catch (\Exception $e) {
+        // Handle any exceptions that occur during the Firebase operation
+        return redirect('dashboard')->with('status', 'An error occurred: ' . $e->getMessage());
+    }
+}
+
+
+
+public function viewadmin(){
+
+    $admins = $this->database->getReference($this->admintable)->getValue();
+    $totaladmins = $this->database->getReference($this->admintable)->getSnapshot()->numChildren();
+
+
+    return view('firebase.admin.viewadmin',compact('admins','totaladmins') );
+
+}
+
+public function editadmin($id){
+    $key = $id;
+$editadmindata = $this->database->getReference($this->admintable)->getChild($key)->getValue();
+if($editadmindata){
+return view('firebase.admin.editadmin' , compact('editadmindata','key'));
+}
+else{
+    return redirect('view_admins')->with('status','admin Id not found');
+}
+
+}
+public function updateadmin(Request $request,$id){
+
+    $key = $id;
+    $validatedadminData = $request->validate([
+        'admin_role' => 'required|string',
+        'admin_email' => 'required|email',
+        'admin_password' => 'min:8'
+    ]);
+
+    $updatedadmin = [
+        'admin_role' => $validatedadminData['admin_role'],
+        'admin_email' => $validatedadminData['admin_email'],
+        'admin_password' => bcrypt($validatedadminData['admin_password']), // Encrypt password before saving
+    ];
+
+
+    $checkupdatedadmin =  $this->database->getReference($this->admintable.'/'.$key)->update($updatedadmin);
+if($checkupdatedadmin){
+    return redirect('view_admins')->with('status','Updated data');
+
+}
+else{
+    return redirect('view_admins')->with('status','not updated');
+
+}
+}
+public function deleteadmin($id){
+    $key = $id;
+    $checkdel=  $this->database->getReference($this->admintable.'/'.$key)->remove();
+    if($checkdel){
+       return redirect('view_admins')->with('status','deleted Admin');
+   
+   }
+   else{
+       return redirect('view_admins')->with('status','data not founded');
+   
+   }
+}
+
 
 
     public function adminprofile()
@@ -33,60 +135,61 @@ public function addnumber(){
 
     return view('firebase.admin.addnumber' , compact('numbers','totalnumbers'));
 }
-public function store(Request $request){
+// public function store(Request $request){
 
 
-    $postData = [
-'fname' => $request -> firstname,
-'lname' => $request -> lastname,
-'number' => $request -> number,
-'email' => $request -> email,
+//     $postData = [
+// 'fname' => $request -> firstname,
+// 'lname' => $request -> lastname,
+// 'number' => $request -> number,
+// 'email' => $request -> email,
 
 
-    ];
-    $postRef = $this->database->getReference($this->tablename)->push($postData);
-if($postRef){
-     return redirect('addnumber')->with('status','Contact Added Successfully');
-}
-else{
-    return redirect('addnumber')->with('status','Contact  Not Added Successfully');
+//     ];
+//     $postRef = $this->database->getReference($this->tablename)->push($postData);
+// if($postRef){
+//      return redirect('addnumber')->with('status','Contact Added Successfully');
+// }
+// else{
+//     return redirect('addnumber')->with('status','Contact  Not Added Successfully');
 
-}
+// }
 
-}
-public function edit($id){
+// }
 
-$key = $id;
-$editdata = $this->database->getReference($this->tablename)->getChild($key)->getValue();
-if($editdata){
-return view('firebase.admin.edit' , compact('editdata','key'));
-}
-else{
-    return redirect('addnumber')->with('status','Contact Id not found');
-}
+// public function edit($id){
 
-}
-public function update(Request $request,$id)  {
+// $key = $id;
+// $editdata = $this->database->getReference($this->tablename)->getChild($key)->getValue();
+// if($editdata){
+// return view('firebase.admin.edit' , compact('editdata','key'));
+// }
+// else{
+//     return redirect('addnumber')->with('status','Contact Id not found');
+// }
+
+// }
+// public function update(Request $request,$id)  {
     
-    $key = $id;
-    $updateddata = [
-        'fname' => $request -> firstname,
-        'lname' => $request -> lastname,
-        'number' => $request -> number,
-        'email' => $request -> email,
+//     $key = $id;
+//     $updateddata = [
+//         'fname' => $request -> firstname,
+//         'lname' => $request -> lastname,
+//         'number' => $request -> number,
+//         'email' => $request -> email,
         
         
-            ];
-    $checkupdate =  $this->database->getReference($this->tablename.'/'.$key)->update($updateddata);
-if($checkupdate){
-    return redirect('addnumber')->with('status','Updated data');
+//             ];
+//     $checkupdate =  $this->database->getReference($this->tablename.'/'.$key)->update($updateddata);
+// if($checkupdate){
+//     return redirect('addnumber')->with('status','Updated data');
 
-}
-else{
-    return redirect('addnumber')->with('status','not updated');
+// }
+// else{
+//     return redirect('addnumber')->with('status','not updated');
 
-}
-}
+// }
+// }
 public function delete($id){
 
     $key = $id;

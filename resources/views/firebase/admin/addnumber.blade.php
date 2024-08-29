@@ -1,3 +1,6 @@
+
+@extends('firebase.layouts.app')
+@section('content')
 <h1>
     add number
 </h1>
@@ -41,3 +44,5 @@
     <h4>NO Record</h4>
 @endforelse
 
+
+@endsection

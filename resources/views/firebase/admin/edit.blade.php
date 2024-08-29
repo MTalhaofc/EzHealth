@@ -1,4 +1,4 @@
-@if (session('status'))
+{{-- @if (session('status'))
     <h4>{{ session('status') }}</h4>
 @endif
 <form action="{{ url('updatednumber/'.$key) }} " method="POST">
@@ -11,4 +11,4 @@
     <button type="submit">update </button>
 </form>
 
-<h5>edit page</h5>
+<h5>edit page</h5> --}}
