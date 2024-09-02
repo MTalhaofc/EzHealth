@@ -6,7 +6,15 @@
     <div class="relative h-screen w-full bg-no-repeat bg-cover bg-center overflow-hidden">
         <div class="absolute inset-0 bg-no-repeat bg-cover bg-center filter blur-[5px]" style="background-image: url('{{ asset('assets/background_imagelogin.jpg') }}'); z-index: -1;"></div>
         
-       
+        @if($errors->any())
+            <div class="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
               
           <div class="flex flex-col items-center justify-center px-4 py-6 mx-auto md:h-screen lg:py-0 shadow-xl">
         <h2 class="text-2xl font-bold mb-2" >Login to Admin Panel</h2>
