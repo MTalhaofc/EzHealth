@@ -4,9 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Firebase\Admins;
 use App\Http\Controllers\Firebase\HomeTesting;
 use App\Http\Controllers\Firebase\OnlineReports;
+use App\Http\Controllers\Firebase\Reports;
 use App\Http\Controllers\Firebase\Users;
 use App\Http\Controllers\Firebase\auth;
+use App\Http\Controllers\Firebase\tests;
 
+use App\Http\Middleware\SuperAdminMiddleware;
+use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Routing\Router;
 
 
 
@@ -16,30 +21,63 @@ use App\Http\Controllers\Firebase\auth;
 //     return view('welcome');
 // });
 
-// Route::get('/', [Admins::class,'adminprofile'])->name('firebase.admin.profile');
-Route::get('/addnumber', [Admins::class,'addnumber'])->name('firebase.admin.addnumber');
-Route::post('/addnumber', [Admins::class,'store']);
-Route::get('editnumber/{id}',[Admins::class,'edit']);
-Route::put('updatednumber/{id}',[Admins::class,'update']);
-Route::get('deletenumber/{id}',[Admins::class,'delete']);
+// Public Routes
+Route::get('/', [auth::class, 'loginpage']);
+Route::get('login', [auth::class, 'loginpage'])->name('login');
+Route::post('/loginadmin', [auth::class, 'loginadmin'])->name('loginadmin');
+
+// Routes accessible by Admin and SuperAdmin
+Route::group(['middleware' => ['admin']], function () {
+    Route::get('dashboard', [auth::class, 'dashboard'])->name('dashboard');
+    Route::post('/logout', [auth::class, 'logout'])->name('logout');
+});
+
+// Routes accessible only by SuperAdmin
+Route::group(['middleware' => ['superadmin']], function () {
+    Route::get('add_admin', [Admins::class, 'addadmin'])->name('add_admin');
+    Route::get('view_admins', [Admins::class, 'viewadmin'])->name('view_admin');
+    Route::post('/add_admin', [Admins::class, 'newadmin']);
+    Route::get('editadmin/{id}', [Admins::class, 'editadmin']);
+    Route::put('updateadmin/{id}', [Admins::class, 'updateadmin']);
+    Route::get('deleteadmin/{id}', [Admins::class, 'deleteadmin']);
+    
+    // SuperAdmin also has access to dashboard and logout
+    Route::get('dashboard', [auth::class, 'dashboard'])->name('dashboard');
+    Route::post('/logout', [auth::class, 'logout'])->name('logout');
+    Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
+Route::post('add_user', [Users::class, 'addusers'])->name('add_user');
+});
 
 
-//lOGIN WEB Routes start from here :
+//Testing routes will be added in middleware soon after setup
+Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
+Route::post('add_user', [Users::class, 'addusers'])->name('add_user');
 
-Route::get('/',[auth::class,'loginpage']);
-Route::get('login',[auth::class,'loginpage'])->name('login');
-Route::post('/loginadmin',[auth::class,'loginadmin'])->name('loginadmin');
-Route::get('dashboard',[auth::class,'dashboard'])->name('dashboard');
-Route::get('superadmin_login', [UserController::class, 'superadmin_login']);
+//will be used for accesing reports list
+Route::get('/view_reports/{id}',[Reports::class,'view_reports'])->name('view_reports');
+//will be used for viewing reports of each user
+Route::get('/view_reports/{id}/add_reports', [Reports::class, 'add_reports'])->name('add_reports');
+//will be used for upload reports -> method post //
+Route::post('/view_reports/{id}/add_reports', [Reports::class, 'upload_reports'])->name('upload_reports');
 
-// ADMINS Web Routes staring from here:
+//will be used for each user each report
 
 
-Route::get('add_admin',[Admins::class,'addadmin'])->name('add_admin');
-Route::get('view_admins',[Admins::class,'viewadmin'])->name('view_admin');
-Route::post('/add_admin',[Admins::class,'newadmin']);
-Route::get('editadmin/{id}',[Admins::class,'editadmin']);
-Route::put('updateadmin/{id}',[Admins::class,'updateadmin']);
-Route::get('deleteadmin/{id}',[Admins::class,'deleteadmin']);
+
+
+//Test list Routes
+Route::get('viewalltests', [tests::class, 'viewalltests'])->name('viewalltests');
+
+Route::get('/add_test',[tests::class, 'add_test'])->name('add_test');
+Route::post('/upload_test',[tests::class, 'upload_test'])->name('upload_test');
+
+
+
+Route::get('/view_test/{id}',[tests::class, 'view_test'])->name('view_test');
+Route::get('edit_test/{id}',[tests::class, 'edit_test']);
+Route::put('update_test/{id}',[tests::class, 'update_test']);
+Route::delete('delete_test/{id}',[tests::class, 'delete_test']);
+
+
 
 

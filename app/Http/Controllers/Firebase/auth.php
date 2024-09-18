@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Contract\Database;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Routing\Router;
 
 
 class auth extends Controller
@@ -43,15 +44,29 @@ public function loginadmin(Request $request) {
             if ($admin['admin_email'] === $request->admin_email) {
                 // Verify the password using Hash check
                 if (Hash::check($request->admin_password, $admin['admin_password'])) {
-                    // Login successful, redirect to the dashboard page
+                    // Login successful, store role in session
+                    session(['admin_role' => $admin['admin_role']]);
+                    
                     return redirect('dashboard')->with('status', 'Login successful');
+                } else {
+                    // Password does not match
+                    return redirect('login')->withErrors(['admin_password' => 'Incorrect password']);
                 }
             }
         }
     }
 
-    // Login failed, redirect back with an error message
-    return redirect('login')->withErrors('Login details are not correct');
+    // Email not found or other login failure
+    return redirect('login')->withErrors(['admin_email' => 'These credentials do not match our records']);
+}
+
+
+public function logout(Request $request){
+    $request->session()->flush();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('login')->with('status', "You have been logged out");
+
 }
 
 

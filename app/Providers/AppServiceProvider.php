@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Http\Middleware\SuperAdminMiddleware;
+use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Routing\Router;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,13 +16,15 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(Router $router): void
     {
-        //
-    }
+        $router->aliasMiddleware('superadmin', \App\Http\Middleware\SuperAdminMiddleware::class);
+        $router->aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
+     }
 }

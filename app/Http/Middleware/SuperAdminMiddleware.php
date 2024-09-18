@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Routing\Router;
 
 
 class SuperAdminMiddleware
@@ -17,6 +18,9 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if(Session::get('admin_role') !== 'Super Admin' ){
+            return redirect('login')->withErrors('Only Super Admin can Access these');
+        }
         return $next($request);
     }
 }
