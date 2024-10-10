@@ -81,3 +81,20 @@ Route::delete('delete_test/{id}',[tests::class, 'delete_test']);
 
 
 
+//temporary routes for adding home tests (appointments)
+Route::get('viewallappointments', [HomeTesting::class, 'viewallapointments'])->name('viewallappointments');
+Route::get('viewsallusersappointments', [HomeTesting::class, 'viewallusers_appointments'])->name('viewallusers_appointments');
+Route::get('viewsusersappointments/{id}', [HomeTesting::class, 'viewusers_appointments'])->name('viewusers_appointments');
+Route::get('viewuserreport/{id}/add_user_appointments', [HomeTesting::class, 'add_appointment'])->name('add_appointment');
+Route::post('viewuserreport/{id}/upload_hometest', [HomeTesting::class, 'upload_hometest'])->name('upload_hometest');
+
+
+
+// Route to view all appointments for a specific user
+Route::get('/view_appointments/{id}', [Appointments::class, 'view_appointments'])->name('view_appointments');
+
+// Route to load the form for adding appointments for a specific user (GET request)
+Route::get('/view_appointments/{id}/add_appointments', [Appointments::class, 'add_appointments'])->name('add_appointments');
+
+// Route to upload the appointment data (POST request)
+Route::post('/view_appointments/{id}/add_appointments', [Appointments::class, 'upload_appointments'])->name('upload_appointments');

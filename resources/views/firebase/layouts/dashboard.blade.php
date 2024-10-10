@@ -17,7 +17,7 @@
         <p>You are logged in as: {{ ucfirst($role) }}</p>
 
         {{-- Display admin-specific links only for super admins --}}
-        @if ($role === 'superadmin')
+        @if ($role === 'Super Admin')
             <a href="{{ route('add_admin') }}">
                 <h3 class="text-blue-500 hover:underline cursor-pointer">ADD ADMIN</h3>
             </a>
@@ -29,7 +29,7 @@
             <h3 class="text-blue-500 hover:underline cursor-pointer">Add Report</h3>
         </a>
         <br>
-        <a href="">
+        <a href="{{route("viewallappointments")}}">
             <h3 class="text-blue-500 hover:underline cursor-pointer">Home Testing</h3>
         </a>
         <br>
