@@ -17,6 +17,7 @@ class Admins extends Controller
     {
         $this->database = $database;
         $this->admintable = 'admins';
+        
     }
 
 public function addadmin(){

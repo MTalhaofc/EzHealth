@@ -57,8 +57,6 @@ public function add_appointment($id)
     }
 }
 
-
-
 public function upload_hometest(Request $request, $id)
 {
     // Log the incoming request data for debugging
@@ -76,6 +74,9 @@ public function upload_hometest(Request $request, $id)
         'user_time_appointment' => 'required',
     ]);
 
+    // Generate a unique key for the appointment using random numbers
+    $userKeyAppointment = mt_rand(1000000000, 9999999999); // 10-digit random number
+
     // Prepare the data for uploading
     $appointmentData = [
         'user_name_appointment' => $request->user_name_appointment,
@@ -86,6 +87,7 @@ public function upload_hometest(Request $request, $id)
         'user_status_appointment' => $request->user_status_appointment,
         'user_test_appointment' => $request->user_test_appointment,
         'user_time_appointment' => $request->user_time_appointment,
+        'user_key_appointment' => $userKeyAppointment, // Add unique key
     ];
 
     try {
@@ -108,11 +110,37 @@ public function upload_hometest(Request $request, $id)
 
 
 
+public function viewallappointments()
+{
+    // Retrieve all appointments from Firebase
+    $appointments = $this->database->getReference($this->hometesttable)->getValue();
 
+    // Filter only appointments with user_status_appointment = 'P'
+    $pendingAppointments = [];
+    if ($appointments) {
+        foreach ($appointments as $key => $appointment) {
+            if ($appointment['user_status_appointment'] === 'P') {
+                $pendingAppointments[$key] = $appointment;
+            }
+        }
+    }
+    
 
-    public function viewallapointments(){
-    return view("firebase.hometesting.viewhometest");
+    // Pass only pending appointments to the view
+    return view("firebase.hometesting.viewallhometest", compact('pendingAppointments'));
 }
+
+
+
+public function viewcompleteappointmests(){
+    $Appointments = $this->database->getReference($this->hometesttable)->getValue();
+    if($Appointments){
+        return view("firebase.hometesting.viewcompletehometest" , compact('Appointments'));
+    
+    }
+}
+
+
 
 public function viewusers_appointments($id) {
     $key = $id;
@@ -163,6 +191,37 @@ public function viewusers_appointments($id) {
         return redirect('viewallusers_appointments')->with('status', 'User ID not found');
     }
 }
+
+public function updateAppointmentStatus(Request $request)
+{
+    // Retrieve the 'status' array from the request
+    $statusData = $request->input('status');
+
+    // Loop through the status data and update each matching appointment
+    foreach ($statusData as $userKey => $status) {
+        // Reference to the hometesting table in Firebase
+        $appointmentsRef = $this->database->getReference($this->hometesttable);
+
+        // Fetch all appointments to find the matching one by user_key_appointment
+        $appointments = $appointmentsRef->getValue();
+
+        // Loop through each appointment and check if user_key_appointment matches
+        foreach ($appointments as $key => $appointment) {
+            if ($appointment['user_key_appointment'] == $userKey) {
+                // Found the matching appointment, update the status
+                $appointmentRef = $appointmentsRef->getChild($key);
+                $appointmentRef->update([
+                    'user_status_appointment' => $status
+                ]);
+                break; // Exit the loop once the matching appointment is found and updated
+            }
+        }
+    }
+
+    // Redirect back or return a response indicating the update was successful
+    return back()->with('success', 'Appointment status updated successfully!');
+}
+
 
 
 

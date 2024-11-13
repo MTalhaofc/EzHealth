@@ -18,55 +18,56 @@ class Users extends Controller
         $this->usertable = 'users';
         $this->reportstable = 'reports';
     }
-    public function addusers(Request $request)
-    {
-        
-        $validatedData = $request->validate([
-            'username' => 'required',
-            'useremail' => 'required|email',
-            'usercnic' => 'required',
-        ]);
-    
-        
-        \Log::info('Validated Data:', $validatedData);
-    
-        $usersRef = $this->database->getReference($this->usertable);
-    
-        $users = $usersRef->getValue();
-        $lastUserId = 0;
-    
-        if ($users) {
-            foreach ($users as $user) {
-                if (isset($user['userid']) && $user['userid'] > $lastUserId) {
-                    $lastUserId = $user['userid'];
-                }
-            }
-        }
-    
-        $newUserId = $lastUserId + 1;
-    
-        $postData = [
-            'userid' => $newUserId,
-            'username' => $validatedData['username'],
-            'useremail' => $validatedData['useremail'],
-            'usercninc'=> $validatedData['usercnic'],
 
-        ];
-    
-    
-        try {
-            $postRef = $usersRef->push($postData);
-    
-            if ($postRef) {
-                return redirect()->route('viewallreports')->with('status', 'User Added Successfully');
-            } else {
-                return redirect()->route('viewallreports')->with('status', 'User Not Added Successfully');
-            }
-        } catch (\Exception $e) {
-            
-    
-            return redirect()->route('viewallreports')->with('status', 'An error occurred: ' . $e->getMessage());
-        }
+public function add_user(){
+    return view('firebase.users.adduser');
+}
+
+
+
+
+public function upload_user(Request $request)
+{
+    $validatedData = $request->validate([
+        'user_name' => 'required',
+        'user_email' => 'required|email',
+        'user_cnic' => 'required',
+        'user_phone' => 'required|numeric',
+        'user_account_status' => 'required',
+        'user_password' => 'required',
+        'user_cnic_image_url' => 'required' // Assuming it's just a URL
+    ]);
+
+    // Reference to Firebase database
+    $usersRef = $this->database->getReference($this->usertable);
+
+    // Prepare user data
+    $userdata = [
+        'user_name' => $validatedData['user_name'],
+        'user_email' => $validatedData['user_email'],
+        'user_cnic' => $validatedData['user_cnic'],
+        'user_phone' => $validatedData['user_phone'],
+        'user_account_status' => $validatedData['user_account_status'],
+        'user_password' => bcrypt($validatedData['user_password']),
+        'user_cnic_image_url' => $validatedData['user_cnic_image_url'] // If using URL, ensure it’s correct
+    ];
+
+    try {
+        // Push data to Firebase
+        $usersRef->push($userdata);
+        return redirect()->route('viewallusers')->with('status', 'User Added Successfully');
+    } catch (\Exception $e) {
+        \Log::error("Firebase Error: " . $e->getMessage()); // Log error for debugging
+        return redirect()->route('viewallusers')->with('status', 'An error occurred: ' . $e->getMessage());
     }
+}
+
+
+
+public function viewallusers(){
+    return view('firebase.users.viewallusers');
+}
+
+
 
 }

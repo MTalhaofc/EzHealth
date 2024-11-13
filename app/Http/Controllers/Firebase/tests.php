@@ -38,46 +38,29 @@ class tests extends Controller
 
     //Post method
 public function upload_test(Request $request){
-
-
-
-
-
-    $validatedData = $request->validate([
-        'test_name' => 'required|string',
+    $request->validate([
+        'test_name' => 'required|string|max:255',
         'test_price' => 'required|numeric',
-        'test_requirements' => 'required',
-        'test_availabilty' => 'required',
-        
+        'test_requirements' => 'required|string|max:255',
+        'test_availabilty' => 'required|string|max:255',
     ]);
-
-    // Prepare data to be inserted into Firebase
-    $postData = [
-        'test_name' => $validatedData['test_name'],
-        'test_price' => $validatedData['test_price'],
-        'test_requirements' => $validatedData['test_requirements'],
-        'test_availabilty' => $validatedData['test_availabilty'],
-
+    $testData = [
+        'test_name' => $request->input('test_name'),
+        'test_price' => $request->input('test_price'),
+        'test_requirements' => $request->input('test_requirements'),
+        'test_availabilty' => $request->input('test_availabilty'),
     ];
-
-    // Insert data into Firebase
-    try {
-        $postRef = $this->database->getReference($this->teststable)->push($postData);
-
-        if ($postRef) {
-            return redirect('viewalltests')->with('status', 'Test Added Successfully');
-        } else {
-            return redirect('viewalltests')->with('status', 'Test Not Added Successfully');
-        }
-    } catch (\Exception $e) {
-        // Handle any exceptions that occur during the Firebase operation
-        return redirect('viewalltests')->with('status', 'An error occurred: ' . $e->getMessage());
-    }
-
-    return view('firebase.usertests.viewalltests');
+   $testuploaded = $this->database->getReference($this->teststable)->push($testData);
+if($testuploaded){
+    return redirect()->route('viewalltests')->with('status','Test Successfully added!');
+}
+else{
+    return redirect()->route('viewalltests')->with('status','Failed to add Test!');
 
 }
 
+}
+    
 
 
     public function view_test($id){
@@ -96,18 +79,63 @@ public function upload_test(Request $request){
 
     }
 
-    public function edit_test(){
+    public function edit_test($id){
 
-        return view('firebase.usertests.edittest');
+        $testData = $this->database->getReference($this->teststable . '/' . $id)->getValue();
+
+        // Check if the test data exists
+        if ($testData) {
+            return view('firebase.usertests.edittest', compact('testData', 'id'));
+        } else {
+            return redirect()->route('viewalltests')->with('status', 'Test not found.');
+        }
 
     }
 //put method
-    public function update_test(){
+public function update_test(Request $request, $id)
+{
+    // Validate the request data
+    $validatedData = $request->validate([
+        'test_name' => 'required|string',
+        'test_price' => 'required|numeric',
+        'test_requirements' => 'required|string',
+        'test_availabilty' => 'required|string',
+    ]);
+
+    // Prepare data for updating in Firebase
+    $updateData = [
+        'test_name' => $validatedData['test_name'],
+        'test_price' => $validatedData['test_price'],
+        'test_requirements' => $validatedData['test_requirements'],
+        'test_availabilty' => $validatedData['test_availabilty'],
+    ];
+
+    // Update data in Firebase
+    try {
+        // Update the test in Firebase
+        $this->database->getReference($this->teststable . '/' . $id)->update($updateData);
         
+        // Redirect back to the view page for this specific test ID
+        return redirect()->route('view_test', ['id' => $id])->with('status', 'Test updated successfully.');
+    } catch (\Exception $e) {
+        // Redirect back to the view page for this specific test ID, showing the error
+        return redirect()->route('view_test', ['id' => $id])->with('status', 'An error occurred: ' . $e->getMessage());
     }
+}
     
     //delete method
-    public function delete_test(){
-        
+    public function delete_test($id)
+    {
+        try {
+            // Delete the test from Firebase
+            $this->database->getReference($this->teststable . '/' . $id)->remove();
+    
+            // Redirect back with a success message
+            return redirect()->route('viewalltests')->with('status', 'Test deleted successfully.');
+        } catch (\Exception $e) {
+            // Handle any exceptions and redirect with an error message
+            return redirect()->route('viewalltests')->with('status', 'An error occurred: ' . $e->getMessage());
+        }
     }
+    
 }

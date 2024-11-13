@@ -36,21 +36,27 @@ class Reports extends Controller
    
 
 
-        public function view_reports($id){
-
-    $key = $id;
-$viewreportdata = $this->database->getReference($this->usertable)->getChild($key)->getValue();
-if($viewreportdata){
-return view('firebase.reports.viewuserreport' , compact('viewreportdata','key'));
-}
-else{
-    return redirect('viewallreports')->with('status','User Id not found');
-}
-
-
-
-
-}
+    public function view_reports($id)
+    {
+        // Set the user's key to fetch specific data
+        $key = $id;
+    
+        // Retrieve the user's report data from Firebase
+        $viewreportdata = $this->database->getReference($this->reportstable) // Assuming 'reports' is the name of the table or path
+                                          ->getChild($key)  // Get the child node by user ID
+                                          ->getValue(); // Fetch the value for that user
+    
+        // Check if data exists for that user
+        if ($viewreportdata) {
+            // If data is found, return the view with the user's report
+            return view('firebase.reports.viewuserreport', compact('viewreportdata', 'key'));
+        } else {
+            // If no data is found, return the view with a message indicating no report is found
+            $status = 'User report not found';
+            return view('firebase.reports.viewuserreport', compact('status', 'viewreportdata','key'));
+        }
+    }
+    
 //will be used to redirect to add reports page
 public function  add_reports($id){
 $key = $id;

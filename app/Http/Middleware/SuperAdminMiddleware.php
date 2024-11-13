@@ -17,10 +17,13 @@ class SuperAdminMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {
-        if(Session::get('admin_role') !== 'Super Admin' ){
-            return redirect('login')->withErrors('Only Super Admin can Access these');
-        }
-        return $next($request);
+{
+    $adminRole = Session::get('admin_role');
+
+    if ($adminRole !== 'Super Admin' && $adminRole !== 'Admin') {
+        return redirect('login')->withErrors('Only Super Admin or Admin can access this');
     }
+    
+    return $next($request);
+}
 }

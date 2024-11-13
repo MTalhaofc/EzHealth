@@ -8,6 +8,8 @@ use App\Http\Controllers\Firebase\Reports;
 use App\Http\Controllers\Firebase\Users;
 use App\Http\Controllers\Firebase\auth;
 use App\Http\Controllers\Firebase\tests;
+use App\Http\Controllers\Firebase\Notifications;
+
 
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\AdminMiddleware;
@@ -16,10 +18,6 @@ use Illuminate\Routing\Router;
 
 
 
-
-// Route::get('/', function() {
-//     return view('welcome');
-// });
 
 // Public Routes
 Route::get('/', [auth::class, 'loginpage']);
@@ -45,7 +43,8 @@ Route::group(['middleware' => ['superadmin']], function () {
     Route::get('dashboard', [auth::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [auth::class, 'logout'])->name('logout');
     Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
-Route::post('add_user', [Users::class, 'addusers'])->name('add_user');
+Route::get('add_user',[Users::class,'add_user'])->name('add_users');
+Route::post('upload_user', [Users::class, 'upload_user'])->name('upload_user');
 });
 
 
@@ -74,19 +73,21 @@ Route::post('/upload_test',[tests::class, 'upload_test'])->name('upload_test');
 
 
 Route::get('/view_test/{id}',[tests::class, 'view_test'])->name('view_test');
-Route::get('edit_test/{id}',[tests::class, 'edit_test']);
-Route::put('update_test/{id}',[tests::class, 'update_test']);
-Route::delete('delete_test/{id}',[tests::class, 'delete_test']);
+Route::get('edit_test/{id}',[tests::class, 'edit_test'])->name("edit_test");
+Route::Post('update_test/{id}',[tests::class, 'update_test'])->name("update_test");
+Route::delete('delete_test/{id}',[tests::class, 'delete_test'])->name("delete_test");
 
 
 
 
 //temporary routes for adding home tests (appointments)
-Route::get('viewallappointments', [HomeTesting::class, 'viewallapointments'])->name('viewallappointments');
+Route::get('viewallappointments', [HomeTesting::class, 'viewallappointments'])->name('viewallappointments'); //For Pending
+Route::get('viewcompleteappointments',[HomeTesting::class,'viewcompleteappointmests'])->name('viewcompleteappointments');
 Route::get('viewsallusersappointments', [HomeTesting::class, 'viewallusers_appointments'])->name('viewallusers_appointments');
 Route::get('viewsusersappointments/{id}', [HomeTesting::class, 'viewusers_appointments'])->name('viewusers_appointments');
 Route::get('viewuserreport/{id}/add_user_appointments', [HomeTesting::class, 'add_appointment'])->name('add_appointment');
 Route::post('viewuserreport/{id}/upload_hometest', [HomeTesting::class, 'upload_hometest'])->name('upload_hometest');
+Route::post('/update-appointment-status', [HomeTesting::class, 'updateAppointmentStatus'])->name('update.appointment.status');
 
 
 
@@ -98,3 +99,11 @@ Route::get('/view_appointments/{id}/add_appointments', [Appointments::class, 'ad
 
 // Route to upload the appointment data (POST request)
 Route::post('/view_appointments/{id}/add_appointments', [Appointments::class, 'upload_appointments'])->name('upload_appointments');
+
+
+//Notification Route
+Route::get('/notifications', [Notifications::class, 'notifications'])->name('notifications');
+Route::post('/notifications/mark-as-read', [Notifications::class, 'markNotificationsAsRead']);
+
+
+Route::get('/viewallusers',[Users::class,'viewallusers'])->name('viewallusers');
