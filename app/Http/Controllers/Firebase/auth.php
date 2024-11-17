@@ -17,10 +17,11 @@ class auth extends Controller
     {
         $this->database = $database;
         $this->admintable = 'admins';
-        $this->hometesting ='hometesting';
+        $this->hometesting ='appointments';
         $this->reports ='reports';
         $this->tests ='tests';
         $this->users ='users';
+        $this->userlogin ='userlogin';
 
     }
 
@@ -82,6 +83,8 @@ public function dashboard(){
     $totalreports = $this->database->getReference($this->reports)->getSnapshot()->numChildren();
     $totaltests = $this->database->getReference($this->tests)->getSnapshot()->numChildren();
     $totalusers = $this->database->getReference($this->users)->getSnapshot()->numChildren();
+    $onlineusers = $this->database->getReference($this->userlogin)->getSnapshot()->numChildren();
+
 
     $appointments = $this->database->getReference($this->hometesting)->getValue();
 
@@ -96,13 +99,28 @@ public function dashboard(){
     
     $pendingAppointmentCount = count($pendingAppointments);
     
+    $users = $this->database->getReference($this->users)->getValue();
+
+    $pendingUsers = [];
+    if ($users) {
+        foreach ($users as $key => $user) {
+            if ($user['user_account_status'] === 'P') {
+                $pendingUsers[$key] = $user;
+            }
+        }
+    }
+
+    $pendingUsersCount = count($pendingUsers);
+
     
 
-    return view('firebase.layouts.dashboard',compact('totaladmins','totalappointments','totalreports','totaltests','totalusers','pendingAppointmentCount'));
+    return view('firebase.layouts.dashboard',compact('totaladmins','totalappointments','totalreports','totaltests','totalusers','pendingAppointmentCount','onlineusers','pendingUsersCount'));
 }
 
 
-
+public function ownership(){
+    return view('firebase.layouts.project');
+}
 
 
 

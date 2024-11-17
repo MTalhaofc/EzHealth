@@ -37,29 +37,47 @@ class tests extends Controller
     }
 
     //Post method
-public function upload_test(Request $request){
-    $request->validate([
-        'test_name' => 'required|string|max:255',
-        'test_price' => 'required|numeric',
-        'test_requirements' => 'required|string|max:255',
-        'test_availabilty' => 'required|string|max:255',
-    ]);
-    $testData = [
-        'test_name' => $request->input('test_name'),
-        'test_price' => $request->input('test_price'),
-        'test_requirements' => $request->input('test_requirements'),
-        'test_availabilty' => $request->input('test_availabilty'),
-    ];
-   $testuploaded = $this->database->getReference($this->teststable)->push($testData);
-if($testuploaded){
-    return redirect()->route('viewalltests')->with('status','Test Successfully added!');
-}
-else{
-    return redirect()->route('viewalltests')->with('status','Failed to add Test!');
-
-}
-
-}
+    public function upload_test(Request $request)
+    {
+        // Validate input except for `test_id` as it will be auto-generated
+        $request->validate([
+            'test_name' => 'required|string|max:255',
+            'test_price' => 'required|numeric',
+            'test_requirements' => 'required|string|max:255',
+            'test_availabilty' => 'required|string|max:255',
+        ]);
+    
+        // Fetch the last test ID from the database
+        $lastTest = $this->database->getReference($this->teststable)
+            ->orderByKey()
+            ->limitToLast(1)
+            ->getSnapshot()
+            ->getValue();
+    
+        // Increment the ID and convert it to a string
+        $nextTestId = $lastTest ? (string)((int)array_key_last($lastTest) + 1) : '1'; // Increment ID or start from '1'
+    
+        // Prepare test data
+        $testData = [
+            'test_name' => $request->input('test_name'),
+            'test_price' => $request->input('test_price'),
+            'test_requirements' => $request->input('test_requirements'),
+            'test_id' => $nextTestId, // test_id is now a string
+            'test_availabilty' => $request->input('test_availabilty'),
+        ];
+    
+        // Upload test data to the database
+        $testUploaded = $this->database->getReference($this->teststable)->push($testData);
+    
+        // Redirect based on the outcome of the upload
+        if ($testUploaded) {
+            return redirect()->route('viewalltests')->with('status', 'Test Successfully added!');
+        } else {
+            return redirect()->route('viewalltests')->with('status', 'Failed to add Test!');
+        }
+    }
+    
+    
     
 
 

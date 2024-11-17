@@ -6,8 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Routing\Router;
 
-class AdminMiddleware
+class adminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,14 +17,14 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Check if the session contains the admin_role and it matches 'Super Admin'
         $adminRole = Session::get('admin_role');
 
-        // Only allow users with the exact role 'Admin'
-        if ($adminRole !== 'Admin') {
-            return redirect('login')->withErrors('Only Admins can access these routes.');
+        if ($adminRole !== 'Super Admin') {
+            // Redirect to login with an error if the user is not a Super Admin
+            return redirect('login')->withErrors('Only Super Admin can access this route.');
         }
 
         return $next($request);
     }
 }
-

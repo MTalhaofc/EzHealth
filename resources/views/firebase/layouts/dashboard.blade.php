@@ -29,66 +29,89 @@
 
 <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
 
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
       <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full">
-        <i class="fas fa-users fa-lg"></i>
+          <i class="fas fa-users fa-lg"></i>
       </div>
       <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Total Users</p>
-        <p class="text-lg font-semibold text-gray-700">{{ $totalusers }}</p>
+          <p class="mb-2 text-sm font-medium text-gray-600">Total Users</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $totalusers }}</p>
       </div>
-    </div>
-  
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
-      <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full">
-        <i class="fas fa-file-alt fa-lg"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Reports</p>
-        <p class="text-lg font-semibold text-gray-700">{{ $totalreports }}</p>
-      </div>
-    </div>
-  
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
-      <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full">
-        <i class="fas fa-vial fa-lg"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Tests</p>
-        <p class="text-lg font-semibold text-gray-700">{{ $totaltests }}</p>
-      </div>
-    </div>
-  
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
-      <div class="p-3 mr-4 text-yellow-500 bg-yellow-100 rounded-full">
-        <i class="fas fa-home fa-lg"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Home Appointments</p>
-        <p class="text-lg font-semibold text-gray-700">{{ $totalappointments }}</p>
-      </div>
-    </div>
-  
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
-      <div class="p-3 mr-4 text-red-500 bg-red-100 rounded-full">
-        <i class="fas fa-clock fa-lg"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Pending Appointments</p>
-        <p class="text-lg font-semibold text-gray-700">{{$pendingAppointmentCount}}</p>
-      </div>
-    </div>
-  
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
-      <div class="p-3 mr-4 text-purple-500 bg-purple-100 rounded-full">
-        <i class="fas fa-user-shield fa-lg"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Admins</p>
-        <p class="text-lg font-semibold text-gray-700">{{ $totaladmins }}</p>
-      </div>
-    </div>
-  
   </div>
+
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full">
+          <i class="fas fa-file-alt fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Reports</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $totalreports }}</p>
+      </div>
+  </div>
+
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full">
+          <i class="fas fa-vial fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Tests</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $totaltests }}</p>
+      </div>
+  </div>
+
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-yellow-500 bg-yellow-100 rounded-full">
+          <i class="fas fa-home fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Home Appointments</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $totalappointments }}</p>
+      </div>
+  </div>
+
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-red-500 bg-red-100 rounded-full">
+          <i class="fas fa-clock fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Pending Appointments</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $pendingAppointmentCount }}</p>
+      </div>
+  </div>
+
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-purple-500 bg-purple-100 rounded-full">
+          <i class="fas fa-user-shield fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Admins</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $totaladmins }}</p>
+      </div>
+  </div>
+
+  <!-- Pending Users Card -->
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-gray-500 bg-gray-100 rounded-full">
+          <i class="fas fa-user-clock fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Pending Users</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $pendingUsersCount }}</p>
+      </div>
+  </div>
+
+  <!-- Online Users Card -->
+  <div class="flex items-center p-4 bg-white rounded-lg shadow-lg">
+      <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full">
+          <i class="fas fa-laptop-house fa-lg"></i>
+      </div>
+      <div>
+          <p class="mb-2 text-sm font-medium text-gray-600">Online Users</p>
+          <p class="text-lg font-semibold text-gray-700">{{ $onlineusers }}</p>
+      </div>
+  </div>
+
+</div>
+
   
 @endsection

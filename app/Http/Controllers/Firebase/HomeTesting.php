@@ -18,7 +18,7 @@ class HomeTesting extends Controller
     {
         $this->database = $database;
         $this->usertable = 'users';
-        $this->hometesttable = 'hometesting';
+        $this->hometesttable = 'appointments';
         
     }
 
@@ -47,9 +47,9 @@ public function add_appointment($id)
     // Check if data is retrieved successfully
     if ($addappointmentdata) {
         // Pass data and key to the view
-        $username = $userdata['username'];
-        $usernumber = $userdata['userphonenumber'];
-        $usercnic = $userdata['usercnic'];
+        $username = $userdata['user_name'];
+        $usernumber = $userdata['user_phone'];
+        $usercnic = $userdata['user_cnic'];
         return view('firebase.hometesting.addhometest', compact('addappointmentdata', 'key','username','usernumber','usercnic'));
     } else {
         // Redirect if user ID is not found
@@ -75,7 +75,7 @@ public function upload_hometest(Request $request, $id)
     ]);
 
     // Generate a unique key for the appointment using random numbers
-    $userKeyAppointment = mt_rand(1000000000, 9999999999); // 10-digit random number
+    $userKeyAppointment = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 8);
 
     // Prepare the data for uploading
     $appointmentData = [
@@ -158,8 +158,8 @@ public function viewusers_appointments($id) {
     // Check if the user data exists
     if ($userappontmentdata) {
         // Extract username and user CNIC
-        $username = $userdata['username'];
-        $userCnic = trim($userdata['usercnic']);  // Trim any extra spaces
+        $username = $userdata['user_name'];
+        $userCnic = trim($userdata['user_cnic']);  // Trim any extra spaces
 
         // Debug: Log or dump the user CNIC
         \Log::info('User CNIC: ' . $userCnic);

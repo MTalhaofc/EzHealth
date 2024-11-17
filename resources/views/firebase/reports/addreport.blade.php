@@ -23,39 +23,39 @@
                 <label for="patient_name" class="block mb-2 text-sm font-medium text-gray-700">
                     <i class="fas fa-user mr-2 text-blue-500"></i> Patient Name
                 </label>
-                <input type="text" id="patient_name" name="patient_name"
+                <input type="text" id="patient_name" name="user_report_patient_name"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter patient name" required />
+                    placeholder="Enter patient name" readonly required value="{{ old('user_report_patient_name', $addreportdata['user_name'] ?? '') }}"/>
             </div>
 
-            <!-- Patient CNIC (Report ID) -->
+            <!-- Report CNIC -->
             <div class="mb-5">
-                <label for="patient_cnic" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="fas fa-id-card mr-2 text-green-500"></i> Patient CNIC (Report ID)
+                <label for="report_cnic" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="fas fa-id-card mr-2 text-green-500"></i> Report CNIC
                 </label>
-                <input type="text" id="report_id" name="report_id"
+                <input type="text" id="report_cnic" name="user_report_cnic"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter patient CNIC" required />
+                    placeholder="Enter CNIC" readonly required value="{{ old('user_report_cnic', $addreportdata['user_cnic'] ?? '') }}"/>
             </div>
 
-            <!-- Parent ID -->
+            <!-- Parent CNIC -->
             <div class="mb-5">
                 <label for="parent_id" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="fas fa-key mr-2 text-yellow-500"></i> Parent ID (4 digits)
+                    <i class="fas fa-key mr-2 text-yellow-500"></i> Parent CNIC
                 </label>
-                <input type="number" id="parent_id" name="parent_id"
+                <input type="text" id="parent_id" name="user_report_parent_cnic"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="1234" min="1000" max="9999" required />
+                    placeholder="Enter parent CNIC" required value="{{ old('user_report_parent_cnic', '') }}"/>
             </div>
 
             <!-- Test Date -->
             <div class="mb-5">
                 <label for="test_date" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="fas fa-calendar-alt mr-2 text-orange-500"></i> Test Date
+                    <i class="fas fa-calendar-alt mr-2 text-orange-500"></i> Test Date (dd/mm/yyyy)
                 </label>
-                <input type="date" id="test_date" name="test_date"
+                <input type="date" id="test_date" name="user_report_date"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required />
+                    placeholder="Enter test date" required value="{{ old('user_report_date', '') }}"/>
             </div>
 
             <!-- Test Time -->
@@ -63,9 +63,9 @@
                 <label for="test_time" class="block mb-2 text-sm font-medium text-gray-700">
                     <i class="fas fa-clock mr-2 text-purple-500"></i> Test Time
                 </label>
-                <input type="time" id="test_time" name="test_time"
+                <input type="time" id="test_time" name="user_report_time"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required />
+                    required value="{{ old('user_report_time', '') }}"/>
             </div>
 
             <!-- Report Image -->
@@ -75,7 +75,27 @@
                 </label>
                 <input type="file" id="report_image" name="report_image"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    accept="image/*" required />
+                    accept="image/*" required/>
+            </div>
+
+            <!-- Test ID -->
+            <div class="mb-5">
+                <label for="test_id" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="fas fa-id-badge mr-2 text-blue-500"></i> Test ID
+                </label>
+                <input type="number" id="test_id" name="user_report_test_id"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="Test ID" required value="{{ old('user_report_test_id', '1') }}"/>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-5">
+                <label for="price" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="fas fa-money-bill mr-2 text-green-500"></i> Price
+                </label>
+                <input type="number" id="price" name="user_report_price"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="Enter price" required value="{{ old('user_report_price', '') }}"/>
             </div>
 
             <!-- Submit Button -->

@@ -76,7 +76,7 @@
                         @if(request()->is('viewallusers'))
                             <span class="absolute inset-y-0 left-0 w-1 bg-red-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
                         @endif
-                        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800" href="{{'viewallusers'}}">
+                        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800" href="{{route('viewallusers')}}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
                                 <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
@@ -111,7 +111,21 @@
                         </a>
                     </li>
         
-                  
+                    <li class="relative px-6 py-3 {{ request()->is('online_reports') ? 'text-gray-800' : 'text-gray-500' }}">
+                        @if(request()->is('online_reports'))
+                            <span class="absolute inset-y-0 left-0 w-1 bg-red-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
+                        @endif
+                        <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800" href="{{ route('online_reports') }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke-linejoin="round"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21" stroke-linecap="round"></line>
+                                <line x1="12" y1="17" x2="12" y2="21" stroke-linecap="round"></line>
+                              </svg>
+                              
+                            <span class="ml-4">Online Reports</span>
+                        </a>
+                    </li>
+                    
                     
         
                     @if ($role === 'Super Admin')
@@ -153,7 +167,7 @@
 
     <!-- Footer -->
     <footer class="bg-black text-white border-t border-gray-200 text-center p-4">
-        <p class="text-white">© 2024 Ez Health | <a href="#" class="text-red-600 hover:underline">Project Ownership</a></p>
+        <p class="text-white">© 2024 Ez Health | <a href="{{route('ownership')}}" class="text-red-600 hover:underline">Project Ownership</a></p>
     </footer>
 
 </body>

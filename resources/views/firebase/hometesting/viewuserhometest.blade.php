@@ -7,9 +7,7 @@
         <table class="min-w-full bg-white border ">
             <thead class="bg-blue-600 text-white">
                 <tr class="bg-blue-600 text-white">
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    User ID
-                    </th>
+                  
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Name
                     </th>
@@ -24,14 +22,12 @@
             <tbody>
                 @foreach ($users as $key => $user)
                     <tr class="bg-white border-b hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap">
-                            {{ $user['userid'] }}
-                        </th>
+                    
                         <td class="px-6 py-4">
-                            {{ $user['username'] }}
+                            {{ $user['user_name'] ?? 'NA' }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $user['useremail'] }}
+                            {{ $user['user_email'] ?? 'NA' }}
                         </td>
                         <td class="px-6 py-4 flex items-center gap-2">
                             <a href="{{ url( 'viewsusersappointments/' . $key ) }}">

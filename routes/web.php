@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Firebase\Admins;
 use App\Http\Controllers\Firebase\HomeTesting;
-use App\Http\Controllers\Firebase\OnlineReports;
+use App\Http\Controllers\Firebase\OnlineReport;
 use App\Http\Controllers\Firebase\Reports;
 use App\Http\Controllers\Firebase\Users;
 use App\Http\Controllers\Firebase\auth;
@@ -12,7 +12,9 @@ use App\Http\Controllers\Firebase\Notifications;
 
 
 use App\Http\Middleware\SuperAdminMiddleware;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\UserMiddleware;
+use App\Http\Middleware\adminMiddleware;
+
 use Illuminate\Routing\Router;
 
 
@@ -23,29 +25,66 @@ use Illuminate\Routing\Router;
 Route::get('/', [auth::class, 'loginpage']);
 Route::get('login', [auth::class, 'loginpage'])->name('login');
 Route::post('/loginadmin', [auth::class, 'loginadmin'])->name('loginadmin');
+Route::get('/loginuser',[OnlineReport::class,'loginuser'])->name('loginuser');
+Route::Post('/login_user',[OnlineReport::class,'login_user'])->name('login_user');
+Route::get('/ownership',[auth::class,'ownership'])->name('ownership');
 
-// Routes accessible by Admin and SuperAdmin
-Route::group(['middleware' => ['admin']], function () {
-    Route::get('dashboard', [auth::class, 'dashboard'])->name('dashboard');
-    Route::post('/logout', [auth::class, 'logout'])->name('logout');
+
+
+//Admin routes only accessible by Super Admin
+Route::middleware([adminMiddleware::class])->group(function () {
+
+Route::get('add_admin', [Admins::class, 'addadmin'])->name('add_admin');
+Route::get('view_admins', [Admins::class, 'viewadmin'])->name('view_admin');
+Route::post('/add_admin', [Admins::class, 'newadmin']);
+Route::get('editadmin/{id}', [Admins::class, 'editadmin']);
+Route::put('updateadmin/{id}', [Admins::class, 'updateadmin']);
+Route::get('deleteadmin/{id}', [Admins::class, 'deleteadmin']);
+
 });
 
 // Routes accessible only by SuperAdmin
 Route::group(['middleware' => ['superadmin']], function () {
-    Route::get('add_admin', [Admins::class, 'addadmin'])->name('add_admin');
-    Route::get('view_admins', [Admins::class, 'viewadmin'])->name('view_admin');
-    Route::post('/add_admin', [Admins::class, 'newadmin']);
-    Route::get('editadmin/{id}', [Admins::class, 'editadmin']);
-    Route::put('updateadmin/{id}', [Admins::class, 'updateadmin']);
-    Route::get('deleteadmin/{id}', [Admins::class, 'deleteadmin']);
+   
     
     // SuperAdmin also has access to dashboard and logout
     Route::get('dashboard', [auth::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [auth::class, 'logout'])->name('logout');
-    Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
+
+
+
+
+    //userroutes
 Route::get('add_user',[Users::class,'add_user'])->name('add_users');
 Route::post('upload_user', [Users::class, 'upload_user'])->name('upload_user');
-});
+
+
+
+
+//Admins routes
+
+
+
+
+
+
+
+
+
+//Admin panel routes
+
+
+Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
+
+
+
+
+
+
+
+
+
+
 
 
 //Testing routes will be added in middleware soon after setup
@@ -106,4 +145,38 @@ Route::get('/notifications', [Notifications::class, 'notifications'])->name('not
 Route::post('/notifications/mark-as-read', [Notifications::class, 'markNotificationsAsRead']);
 
 
-Route::get('/viewallusers',[Users::class,'viewallusers'])->name('viewallusers');
+Route::get('viewallusers',[Users::class,'viewallusers'])->name('viewallusers');
+Route::get('view_user/{id}',[Users::class,'view_user'])->name('view_user');
+Route::get('edit_user/{id}',[Users::class,'edit_user'])->name('edit_user');
+Route::put('update_user/{id}',[Users::class,'update_user'])->name('update_user');
+Route::get('pending_users',[Users::class,'pending_users'])->name('pending_users');
+Route::get('pending_user/{id}',[Users::class,'pending_user'])->name('pending_user');
+Route::post('update_user_status/{id}', [Users::class, 'update_user_status'])->name('update_user_status');
+
+
+
+
+
+Route::get('/reports/{reportKey}/details', [Reports::class, 'view_complete_report'])->name('view_complete_report');
+Route::delete('reports/delete/{reportKey}', [Reports::class, 'deleteReport'])->name('delete_report');
+// Route to show the edit form
+Route::get('reports/edit/{reportKey}', [Reports::class, 'editReport'])->name('edit_report');
+
+// Route to handle the form submission
+Route::post('reports/edit/{reportKey}', [Reports::class, 'editReport'])->name('update_report');
+
+
+Route::get('online_reports',[OnlineReport::class,'online_reports'])->name('online_reports');
+
+Route::get('/generate-login/{userKey}', [OnlineReport::class, 'generateLogin'])->name('generateLogin');
+
+
+});
+
+
+
+Route::middleware([UserMiddleware::class])->group(function () {
+    Route::get('online_view_report/{userkey}', [OnlineReport::class, 'online_view_report'])->name('online_view_report');
+    Route::post('/logoutuser', [OnlineReport::class, 'logoutuser'])->name('logoutuser');
+    Route::get('report/details/{report_key}', [OnlineReport::class, 'showReportDetails'])->name('report.details');
+});
