@@ -46,7 +46,6 @@
                     <th class="px-4 py-3">Appointment Date</th>
                     <th class="px-4 py-3">Appointment Time</th>
                     <th class="px-4 py-3">Test</th>
-                    <th class="px-4 py-3">Status</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y">
@@ -58,20 +57,8 @@
                         <td class="px-4 py-3 text-sm">{{ $appointment['user_date_appointment'] }}</td>
                         <td class="px-4 py-3 text-sm">{{ $appointment['user_time_appointment'] }}</td>
                         <td class="px-4 py-3 text-sm">{{ $appointment['user_test_appointment'] }}</td>
-                        <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight rounded-full
-                            @if ($appointment['user_status_appointment'] === 'P') text-orange-700 bg-orange-100 
-                            @elseif ($appointment['user_status_appointment'] === 'T') text-green-700 bg-green-100 
-                            @elseif ($appointment['user_status_appointment'] === 'F') text-red-700 bg-red-100 
-                            @else text-gray-700 bg-gray-100 
-                            @endif">
-                                @if ($appointment['user_status_appointment'] === 'P') Pending
-                                @elseif ($appointment['user_status_appointment'] === 'T') Accepted
-                                @elseif ($appointment['user_status_appointment'] === 'F') Rejected
-                                @else Unknown Status
-                                @endif
-                            </span>
-                        </td>
+                      
+                       
                     </tr>
                 @endforeach
             </tbody>

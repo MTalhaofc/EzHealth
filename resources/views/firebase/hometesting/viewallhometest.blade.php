@@ -63,8 +63,8 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2">
-                                <input type="radio" name="status[{{ $appointment['user_key_appointment'] }}]" value="T" class="mr-2"> Accept
-                                <input type="radio" name="status[{{ $appointment['user_key_appointment'] }}]" value="F" class="mr-2"> Reject
+                                <input type="radio" name="status[{{ $appointment['user_key_appointment'] }}]" value="T" class="mr-2"> Completed
+                                <input type="radio" name="status[{{ $appointment['user_key_appointment'] }}]" value="F" class="mr-2"> Not Completed
                             </td>
                         </tr>
                     @endforeach
@@ -75,7 +75,6 @@
         <div class="mt-4 flex justify-between items-center">
             <!-- Update Status Button with Double Tick Icon -->
             <button type="submit" class="flex items-center bg-indigo-600 text-white rounded-md hover:bg-indigo-700 px-6 py-2 text-sm font-semibold">
-                <!-- Double Tick Icon -->
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 11l3 3L22 4"></path>
                     <path d="M9 17l3 3L22 10"></path>
@@ -83,13 +82,12 @@
                 Update Status
             </button>
         
-            <!-- Accept All and Clear All Buttons with Icons and Smaller Size, Aligned in One Row -->
             <div class="flex gap-4">
                 <button type="button" onclick="acceptAll()" class="flex items-center bg-green-600 text-white rounded-md hover:bg-green-700 px-4 py-1 text-xs font-semibold">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 12l5 5L20 7"></path>
                     </svg>
-                    Accept All
+                    Complete All
                 </button>
                 <button type="button" onclick="clearAll()" class="flex items-center bg-red-600 text-white rounded-md hover:bg-red-700 px-4 py-1 text-xs font-semibold">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

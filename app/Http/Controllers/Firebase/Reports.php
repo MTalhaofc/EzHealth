@@ -247,14 +247,25 @@ public function deleteReport($reportKey)
         // Perform the deletion
         $report->remove();
         
-        // Redirect to the 'viewallreports' route with a success message
+        
         return redirect()->route('viewallreports')->with('status', 'Report deleted successfully.');
     } else {
-        // Redirect to the 'viewallreports' route with an error message if the report is not found
+       
         return redirect()->route('viewallreports')->with('status', 'Report not found.');
     }
 }
+public function searchUsers(Request $request)
+{
+    $query = $request->input('query');
+    $allUsers = $this->database->getReference($this->usertable)->getValue(); 
 
+   
+    $filteredUsers = array_filter($allUsers, function ($user) use ($query) {
+        return str_contains(strtolower($user['user_name']), strtolower($query));
+    });
+
+    return view('firebase.reports.viewallreports', ['users' => $filteredUsers]);
+}
 
 
 }

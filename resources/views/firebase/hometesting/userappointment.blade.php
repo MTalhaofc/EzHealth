@@ -37,9 +37,9 @@
                             @if ($appointment['user_status_appointment'] === 'P')
                                 <span class="text-yellow-600 font-semibold">Pending</span>
                             @elseif ($appointment['user_status_appointment'] === 'T')
-                                <span class="text-green-600 font-semibold">Accepted</span>
+                                <span class="text-green-600 font-semibold">Completed</span>
                             @elseif ($appointment['user_status_appointment'] === 'F')
-                                <span class="text-red-600 font-semibold">Rejected</span>
+                                <span class="text-red-600 font-semibold">Not Completed</span>
                             @else
                                 <span class="text-gray-600 font-semibold">Unknown Status</span>
                             @endif

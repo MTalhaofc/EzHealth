@@ -29,13 +29,13 @@ public function add_user(){
 public function upload_user(Request $request)
 {
     $validatedData = $request->validate([
-        'user_name' => 'required',
-        'user_email' => 'required|email',
-        'user_cnic' => 'required',
-        'user_phone' => 'required|numeric',
-        'user_account_status' => 'required',
-        'user_password' => 'required',
-        'user_cnic_img_url' => 'required' // Assuming it's just a URL
+       'username' => 'required',
+'user_email' => 'required|email',
+'user_cnic' => 'required|digits:13',
+'user_phone' => 'required|digits:11',
+'user_account_status' => 'required',
+'user_password' => 'required|  min:8',
+'user_cnic_img_url' => 'required'
     ]);
 
     // Reference to Firebase database
@@ -156,4 +156,18 @@ public function update_user_status(Request $request, $id)
 
     return redirect()->route('pending_users')->with('success', 'User status updated successfully.');
 }
+
+public function searchUsers(Request $request)
+{
+    $query = $request->input('query');
+    $allUsers = $this->database->getReference($this->usertable)->getValue(); // Replace with your method to fetch users
+
+    // Filter users by name
+    $filteredUsers = array_filter($allUsers, function ($user) use ($query) {
+        return str_contains(strtolower($user['user_name']), strtolower($query));
+    });
+
+    return view('firebase.users.viewallusers', ['users' => $filteredUsers]);
+}
+
 }

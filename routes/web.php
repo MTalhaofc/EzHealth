@@ -61,29 +61,7 @@ Route::post('upload_user', [Users::class, 'upload_user'])->name('upload_user');
 
 
 
-//Admins routes
-
-
-
-
-
-
-
-
-
-//Admin panel routes
-
-
 Route::get('viewallreports',[Reports::class,'viewallreports'])->name('viewallreports');
-
-
-
-
-
-
-
-
-
 
 
 
@@ -99,8 +77,8 @@ Route::get('/view_reports/{id}/add_reports', [Reports::class, 'add_reports'])->n
 Route::post('/view_reports/{id}/add_reports', [Reports::class, 'upload_reports'])->name('upload_reports');
 
 //will be used for each user each report
-
-
+Route::get('search_users_report', [Reports::class, 'searchUsers'])->name('search.users');
+Route::get('search_users_user', [Users::class, 'searchUsers'])->name('search.users');
 
 
 //Test list Routes
@@ -110,13 +88,10 @@ Route::get('/add_test',[tests::class, 'add_test'])->name('add_test');
 Route::post('/upload_test',[tests::class, 'upload_test'])->name('upload_test');
 
 
-
 Route::get('/view_test/{id}',[tests::class, 'view_test'])->name('view_test');
 Route::get('edit_test/{id}',[tests::class, 'edit_test'])->name("edit_test");
 Route::Post('update_test/{id}',[tests::class, 'update_test'])->name("update_test");
 Route::delete('delete_test/{id}',[tests::class, 'delete_test'])->name("delete_test");
-
-
 
 
 //temporary routes for adding home tests (appointments)
@@ -127,7 +102,6 @@ Route::get('viewsusersappointments/{id}', [HomeTesting::class, 'viewusers_appoin
 Route::get('viewuserreport/{id}/add_user_appointments', [HomeTesting::class, 'add_appointment'])->name('add_appointment');
 Route::post('viewuserreport/{id}/upload_hometest', [HomeTesting::class, 'upload_hometest'])->name('upload_hometest');
 Route::post('/update-appointment-status', [HomeTesting::class, 'updateAppointmentStatus'])->name('update.appointment.status');
-
 
 
 // Route to view all appointments for a specific user
@@ -154,9 +128,6 @@ Route::get('pending_user/{id}',[Users::class,'pending_user'])->name('pending_use
 Route::post('update_user_status/{id}', [Users::class, 'update_user_status'])->name('update_user_status');
 
 
-
-
-
 Route::get('/reports/{reportKey}/details', [Reports::class, 'view_complete_report'])->name('view_complete_report');
 Route::delete('reports/delete/{reportKey}', [Reports::class, 'deleteReport'])->name('delete_report');
 // Route to show the edit form
@@ -165,13 +136,12 @@ Route::get('reports/edit/{reportKey}', [Reports::class, 'editReport'])->name('ed
 // Route to handle the form submission
 Route::post('reports/edit/{reportKey}', [Reports::class, 'editReport'])->name('update_report');
 
-
 Route::get('online_reports',[OnlineReport::class,'online_reports'])->name('online_reports');
 
 Route::get('/generate-login/{userKey}', [OnlineReport::class, 'generateLogin'])->name('generateLogin');
 
-
 });
+
 
 
 
@@ -180,3 +150,9 @@ Route::middleware([UserMiddleware::class])->group(function () {
     Route::post('/logoutuser', [OnlineReport::class, 'logoutuser'])->name('logoutuser');
     Route::get('report/details/{report_key}', [OnlineReport::class, 'showReportDetails'])->name('report.details');
 });
+
+
+
+
+
+
